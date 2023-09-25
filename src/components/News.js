@@ -11,8 +11,9 @@ import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import utc from 'dayjs/plugin/utc';
+import { IoFilterSharp } from "react-icons/io5";
+import { IconContext } from "react-icons";
 dayjs.extend(utc);
-
 
 
 function News(props) {
@@ -28,6 +29,7 @@ function News(props) {
   const [Country, setCountry] = useState('')
   const [from, setfrom] = useState(null)
   const [to, setto] = useState(null)
+  const [isFilterShowing, setIsFilterShowing] = useState(false);
 
   const listOfCountries= ['Australia- au',
   'Brazil- br',
@@ -147,6 +149,10 @@ function News(props) {
     setpageNumber(pageNumber + 1);
   };
 
+  const handleFilterButton = ()=>{
+setIsFilterShowing(isFilterShowing?false:true)
+  }
+
   useEffect(() => {
     fetchNews();
   }, [pageNumber,Country,from,to]);
@@ -155,13 +161,17 @@ function News(props) {
 
   return (
     <>
-      <center>
-        <h1 className="title-font text-2xl font-medium dark:text-white mx-auto my-5 text-black">
+      <div className="flex items-center justify-center dark:invert">
+        <h1 className="title-font text-2xl font-medium mx-auto my-5 text-black w-full text-center">
           {isLoading && <LoadingBar progress={progress} buffer={buffer} />}
          {capitalizeFirstLetter(props.category)} News
         </h1>
-      </center>
-<div className="flex items-center justify-center dark:invert flex-wrap-reverse">
+        <IconContext.Provider value={{ color: "", size: "1.5em" }}>
+<div className={`mr-5 -ml-5 w-10 h-10 md:hidden ${isFilterShowing?'border':''} border-2px rounded-md border-black p-2`} onClick={handleFilterButton}><IoFilterSharp/></div>
+      </IconContext.Provider>
+      </div>
+
+<div className={`flex items-center justify-center dark:invert flex-wrap-reverse transition-all overflow-hidden md:max-h-max ${isFilterShowing?"":'max-h-0'}`}>
 <LocalizationProvider dateAdapter={AdapterDayjs}> 
 <div className="flex flex-wrap [&>*]:m-3 items-center justify-center">
   <div>
@@ -179,6 +189,8 @@ function News(props) {
       <MultipleSelect selectList={listOfCountries} setCountry={updateCountry}/>
 </div>
 </div>
+
+
       <InfiniteScroll
         dataLength={articles.length}
         next={fetchMoreNews}
