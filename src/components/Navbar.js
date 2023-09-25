@@ -30,9 +30,14 @@ const searchHandle = (elem) =>{
   setSearchTxt(inputText);
 }
 
+const removeWhiteSpace = (text) => {
+  let updated_text = text.replace(/\s\s+/g, " ");
+  return(updated_text)
+};
+
 const searchRequest = ()=>{
-  props.searchHandle(searchTxt)
-  navigate(`search/${searchTxt}`)
+  props.searchHandle(removeWhiteSpace(searchTxt).trim())
+  navigate(`search/${removeWhiteSpace(searchTxt).trim()}`)
 }
 
   const toggleMode = () => {
