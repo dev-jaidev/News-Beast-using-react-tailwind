@@ -7,9 +7,11 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { IconContext } from "react-icons";
 import { Outlet, Link, NavLink, useNavigate } from "react-router-dom";
 import debounce from "lodash/debounce";
+import { useLocation } from 'react-router-dom';
 
 
 function Navbar(props) {
+  const location = useLocation()
   const navigate = useNavigate();
   let previousScrollY = 0;
   const [scrollDir, setscrollDir] = useState("up");
@@ -37,7 +39,13 @@ const removeWhiteSpace = (text) => {
 
 const searchRequest = ()=>{
   props.searchHandle(removeWhiteSpace(searchTxt).trim())
-  navigate(`search/${removeWhiteSpace(searchTxt).trim()}`)
+  const urlArr = location.pathname.split('/')
+  if (urlArr[urlArr.length-2] === "search") {
+    navigate(removeWhiteSpace(searchTxt).trim())
+  }
+  else{
+    navigate(`search/${removeWhiteSpace(searchTxt).trim()}`)
+  }
 }
 
   const toggleMode = () => {

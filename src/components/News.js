@@ -13,10 +13,12 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import utc from 'dayjs/plugin/utc';
 import { IoFilterSharp } from "react-icons/io5";
 import { IconContext } from "react-icons";
+import { useLocation } from 'react-router-dom';
 dayjs.extend(utc);
 
 
 function News(props) {
+  const location = useLocation()
   const maxResults = 10;
   const [articles, setArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -30,6 +32,8 @@ function News(props) {
   const [from, setfrom] = useState(null)
   const [to, setto] = useState(null)
   const [isFilterShowing, setIsFilterShowing] = useState(false);
+  const urlArr = location.pathname.split('/')
+  const query = urlArr[urlArr.length-1]
 
   const listOfCountries= ['Australia- au',
   'Brazil- br',
@@ -117,7 +121,7 @@ function News(props) {
 
 
   const fetchNews = async () => {
-    const apiUrl = `https://gnews.io/api/v4/${props.type}?category=${props.category}&lang=en&country=${Country}&max=${props.maxResults}&page=${pageNumber}&from=${from}&to=${to}&q=${props.query}&apikey=${props.apiKey}`;
+    const apiUrl = `https://gnews.io/api/v4/${props.type}?category=${props.category}&lang=en&country=${Country}&max=${props.maxResults}&page=${pageNumber}&from=${from}&to=${to}&q=${query?query:'India'}&apikey=${props.apiKey}`;
     try {
       const response = await fetch(apiUrl);
       setprogress(30);
@@ -150,7 +154,7 @@ function News(props) {
   };
 
   const handleFilterButton = ()=>{
-setIsFilterShowing(isFilterShowing?false:true)
+    setIsFilterShowing(!isFilterShowing);
   }
 
   useEffect(() => {
@@ -167,11 +171,11 @@ setIsFilterShowing(isFilterShowing?false:true)
          {capitalizeFirstLetter(props.category)} News
         </h1>
         <IconContext.Provider value={{ color: "", size: "1.5em" }}>
-<div className={`mr-5 -ml-5 w-10 h-10 md:hidden ${isFilterShowing?'border':''} border-2px rounded-md border-black p-2`} onClick={handleFilterButton}><IoFilterSharp/></div>
+<div className={`mr-5 -ml-5 md:hidden ${isFilterShowing?'border-black':'border-transparent'} border border-2px rounded-md p-2`} onClick={handleFilterButton}><IoFilterSharp/></div>
       </IconContext.Provider>
       </div>
 
-<div className={`flex items-center justify-center dark:invert flex-wrap-reverse transition-all overflow-hidden md:max-h-max ${isFilterShowing?"":'max-h-0'}`}>
+<div className={`flex items-center justify-center dark:invert flex-wrap-reverse transition-[max-height] overflow-hidden md:max-h-max ${isFilterShowing?"max-h-[1000px]":'max-h-0'}`}>
 <LocalizationProvider dateAdapter={AdapterDayjs}> 
 <div className="flex flex-wrap [&>*]:m-3 items-center justify-center">
   <div>

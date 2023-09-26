@@ -9,7 +9,7 @@ import { useState } from "react";
 function App() {
 
   const getRandomElement =(arr)=> {
-    const randomIndex = Math.floor(Math.random() * (arr.length - 1));
+    const randomIndex = Math.floor(Math.random() * (arr.length));
     return arr[randomIndex];
   }
 
@@ -34,8 +34,11 @@ setQuery(newQuery)
       <Route path="sports" element={<News category={"sports"} apiKey={apiKey} key="sports" />} />
       <Route path="science" element={<News category={"science"} apiKey={apiKey} key="science" />} />
       <Route path="health" element={<News category={"health"} apiKey={apiKey} key="health" />} />
-      <Route path={`search/${query}`} element={<News key={query} category='' type="search" query={query} apiKey={apiKey}/>} />
       <Route path="*" element={<PageNotFound />} />
+    </Route>
+    <Route exact path="/search" element={<Navbar searchHandle={searchHandle}/>}>
+      <Route index element={<News key={query} category='' type="search" apiKey={apiKey}/>}/>
+  <Route path="*" element={<News key={query} category='' type="search" apiKey={apiKey}/>}/>
     </Route>
   </Routes>
 </BrowserRouter>
